@@ -1,8 +1,6 @@
 # RtlThatString
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/rtl_that_string`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+RtlThatString is a small, simple gem that helps support right-to-left text and html based on content.
 
 ## Installation
 
@@ -22,7 +20,12 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require 'rtl_that_string'
+
+"هذا اختبار".with_rtl
+# => "\u202Fهذا اختبار\u202E"
+```
 
 ## Development
 
@@ -32,10 +35,9 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/rtl_that_string.
+Bug reports and pull requests are welcome on GitHub at https://github.com/craig-day/rtl_that_string.
 
 
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
