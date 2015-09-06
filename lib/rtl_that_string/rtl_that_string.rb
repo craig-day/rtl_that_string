@@ -32,7 +32,7 @@ module RtlThatString
     when StringDirection::RTL
       rtl_string_borders
     when StringDirection::BIDI
-      bidi_string_borders
+      majority_rtl? ? bidi_string_borders : self
     else
       self
     end
@@ -52,10 +52,22 @@ module RtlThatString
     when StringDirection::RTL
       rtl_html_borders
     when StringDirection::BIDI
-      bidi_html_borders
+      plain_text.majority_rtl? ? bidi_html_borders : self
     else
       self
     end
+  end
+
+  protected
+
+  def majority_rtl?
+    dir_counts = split(' ').each_with_object({}) do |token, h|
+      dir = token.direction
+      h[dir] ||= 1
+      h[dir] += 1
+    end
+
+    dir_counts[StringDirection::RTL] > dir_counts[StringDirection::LTR]
   end
 
   private
