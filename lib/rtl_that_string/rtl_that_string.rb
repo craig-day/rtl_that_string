@@ -17,6 +17,10 @@ module RtlThatString
 
   STRIP_TAGS_REGEX = /<.*?>/.freeze # Strip any html tag, with or without attributes
 
+  def self.included(base)
+    @@direction_detector ||= StringDirection::Detector.new
+  end
+
   # Wrap plain text or html in direction control unicode characters or tags
   #
   # If the string is detected as all RTL characters it will be bordered with
@@ -28,7 +32,7 @@ module RtlThatString
   def with_rtl(options = {})
     return with_rtl_html(options) if options.delete(:html)
 
-    case direction
+    case @@direction_detector.direction(self)
     when StringDirection::RTL
       rtl_string_borders
     when StringDirection::BIDI
@@ -48,7 +52,7 @@ module RtlThatString
   def with_rtl_html(options = {})
     plain_text = self.gsub(STRIP_TAGS_REGEX, '')
 
-    case plain_text.direction
+    case @@direction_detector.direction(plain_text)
     when StringDirection::RTL
       rtl_html_borders
     when StringDirection::BIDI
@@ -62,7 +66,7 @@ module RtlThatString
 
   def majority_rtl?
     dir_counts = split(' ').each_with_object({}) do |token, h|
-      dir = token.direction
+      dir = @@direction_detector.direction(token)
       h[dir] ||= 1
       h[dir] += 1
     end
