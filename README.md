@@ -55,10 +55,11 @@ RtlThatString.configure do |config|
   config.parallel_threshold = 5000
 
   # Number of threads to use when parallel processing. Set either this or
-  # :parallel_processes, not both.
+  # parallel_processes, not both.
   config.parallel_threads = nil
 
-  # Number of processes to use when parallel processing
+  # Number of processes to use when parallel processing. Set either this
+  # or parallel_threads, not both.
   config.parallel_processes = nil
 
   # Number of characters to look at for bidi processing
@@ -69,13 +70,48 @@ end
 ### Available configurations
 
 #### bidi_strategy
-- :majority
-  Split the string into tokens and get the direction of each token. Count the number of tokens for each direction and the greatest count will determine the strings direction.
+Can be one of the following:
+```ruby
+:majority, :start_of_string, :treat_as_ltr, :treat_as_rtl
+```
 
-- :start_of_string
-- :treat_as_ltr
-- :treat_as_rtl
+###### majority
+Split the string into tokens based on [config.split_token](#split_token) then look at the direction of each token. The string will get the direction with the highest number of tokens, e.g. 50 rtl tokens, 20 ltr tokens => rtl string.
 
+###### start_of_string
+Look at the first X characters in the string to determine its direction, where X is set by [sample_length](#sample_length). 
+
+###### treat_as_ltr
+Just treat the string as left-to-right.
+
+###### treat_as_rtl
+Just treat the string as right-to-left.
+
+
+#### split_token
+
+The token to split the string on when using the [majority](#majority) bi-directional handling strategy. This can be any valid patter for ruby's [String#split](http://ruby-doc.org/core-2.2.0/String.html#method-i-split). 
+
+
+#### parallel_bidi_processing
+
+Process bi-direction strings in parallel? This is only used if the [bidi_strategy](#bidi_strategy) is set to `:majority`. The parallel processing is done using the [Parallel gem](https://github.com/grosser/parallel). 
+
+#### parallel_threshold
+
+The lower limit on the number of tokens to start parallel processing. Set this to `0` if you want to always force parallel processing. 
+
+#### parallel_threads
+
+The number of threads to use when parallel processing. Only set this *OR* the number of processes. An exception will be raised if you set both. See [here](https://github.com/grosser/parallel#threads) for more details.
+
+#### parallel_processes
+
+The number of processes to use when parallel processing. Only set this *OR* the number of threads. An exception will be raised if you set both. Defaults to the number of CPUs. See [here](https://github.com/grosser/parallel#processes) for more details. 
+
+#### sample_length
+
+The number of characters to look at when using the [start_of_string](#start_of_string) strategy. 
 
 
 ### Example
