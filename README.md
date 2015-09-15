@@ -2,6 +2,16 @@
 
 RtlThatString is a library that helps support right-to-left text and html based on content. Right now the "default" behavior is only modify text if it is right-to-left or bi-directional.
 
+- [Installation](#installation)
+- [Usage](#usage)
+    - [Out of the box](#out-of-the-box)
+- [Configuration](#configuration)
+    - [Available Configurations](#available-configurations)
+    - [Example](#example)
+- [Development](#development)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Installation
 
 Add this line to your application's Gemfile:
